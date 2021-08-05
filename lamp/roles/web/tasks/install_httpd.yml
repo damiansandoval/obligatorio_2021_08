@@ -1,26 +1,53 @@
 ---
 # These tasks install http and the php modules.
 
-- name: Install httpd and php
-  yum: name={{ item }} state=present
-  with_items:
-   - httpd
-   - php
-   - php-mysql
 
-- name: Install web role specific dependencies
-  yum: name={{ item }} state=installed
-  with_items:
-   - git
 
-- name: Start firewalld
-  service: name=firewalld state=started enabled=yes
+# Lineas 8, 9 y 10 son para testear de manera independiente el rol como playbook
 
-- name: insert firewalld rule for httpd
-  firewalld: port={{ httpd_port }}/tcp permanent=true state=enabled immediate=yes
+# - hosts: webservers
+#   become: yes
+#   tasks:
 
-- name: http service state
-  service: name=httpd state=started enabled=yes
+# Incluir variable HTTPD-Port del archivo de variables
+  - name: Incluir variables
+    include_vars: ../../../group_vars/all
 
-- name: Configure SELinux to allow httpd to connect to remote database
-  seboolean: name=httpd_can_network_connect_db state=true persistent=yes
+# Instalacion de apache y php
+  - name: Install httpd and php
+    yum: 
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - httpd
+      - php
+      - php-mysqlnd
+
+# Instalacion de git
+  - name: Install web role specific dependencies
+    yum: 
+      name: "{{ item }}" 
+      state: installed
+    vars:
+      item:
+      - git
+
+# Inicio de servicio firewalld
+  - name: Start firewalld
+    service: name=firewalld state=started enabled=yes
+
+# Creacion de regla de firewall para httpd
+  - name: insert firewalld rule for httpd
+    firewalld: port={{ httpd_port }}/tcp permanent=true state=enabled immediate=yes
+
+# Inicio y habilitacion de servicio httpd
+  - name: http service state
+    service: name=httpd state=started enabled=yes
+
+# Configuracion de SELinux para conexiones entre apache y mysql
+  - name: "Allow httpd to connect to db (SELinux)"
+    seboolean:
+      name: httpd_can_network_connect_db
+      persistent: yes
+      state: yes

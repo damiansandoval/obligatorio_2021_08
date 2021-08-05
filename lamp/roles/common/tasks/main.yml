@@ -40,6 +40,7 @@
         packages: 
         - python3-libselinux
         - python3-libsemanage
+        - policycoreutils-python-utils
         - firewalld
       when: ansible_facts['os_family'] == "RedHat" 
 
