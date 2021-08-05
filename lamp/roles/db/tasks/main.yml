@@ -18,8 +18,10 @@
       state: present
     vars:
         packages:         
-        - mysql-server      
+        - mysql-server
+        - mysql-client      
         - python3-pip
+        - python3-mysqldb
     when: ansible_facts['os_family'] == "Debian"
 
 #### RedHat ###
@@ -30,12 +32,25 @@
     vars:
         packages:
         - mysql-server
-        - python3-pip        
+        - mysql
+        - python3-pip
+        #- python3-mysql
+        - python3-mysqlclient
+        #- python3-mysqldb
+        #- python-pymysql
+        #- MySQL-python        
     when: ansible_facts['os_family'] == "RedHat"
   
   - name: Instalo MySQL-python
     pip:
-      name: mysql-connector
+      name: mysql-connector-python
+      executable: pip3
+      state: present
+
+  - name: Instalo MySQL-python
+    pip:
+      name: PyMySQL
+      executable: pip3
       state: present
 
 #### RedHat ###
@@ -55,6 +70,14 @@
       owner: mysql
       group: mysql
       mode: '0775'
+
+  - name: Creo socket de MySQL
+    file:
+      path: /var/lib/mysql/mysql.sock
+      state: touch
+      owner: mysql
+      group: mysql
+      mode: '0775'    
 
   - name: Creo el directorio para PID de MySQL
     file:
@@ -93,11 +116,11 @@
 
 
 
-# #### RedHat ###
-# - name: Create Application Database
-#   mysql_db:
-#    name: {{ dbname }}
-#    state: present
+#### RedHat ###
+  - name: Create Application Database
+    mysql_db:
+      name: "{{ dbname }}"
+      state: present
 
 # - name: Create Application DB User
 #   mysql_user:
