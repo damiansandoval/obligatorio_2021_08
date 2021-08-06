@@ -1,3 +1,91 @@
-# ---
-# - include: install_httpd.yml
-# - include: copy_code.yml
+# Lineas 8, 9 y 10 son para testear de manera independiente el rol como playbook
+
+# - hosts: all
+#   become: yes
+#   tasks:
+# Incluir variable HTTPD-Port del archivo de variables
+  - name: Incluir variables
+    include_vars: ../../../group_vars/all.yml
+
+#### Instalacion de apache y php ####
+
+#### RedHat ###
+  - name: Install httpd and php
+    yum: 
+      name: "{{ packages }}"
+      state: present
+    vars:
+        packages:
+        - httpd
+        - php
+        - php-mysqlnd
+    when: ansible_facts['os_family'] == "RedHat"
+
+#####  Debian ####
+  - name: Install httpd and php
+    apt: 
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - apache2
+      - php
+      - libapache2-mod-php
+      - php-mysqlnd
+    when: ansible_facts['os_family'] == "Debian"
+
+#### Instalacion de git ###
+  - name: Install web role specific dependencies
+    yum: 
+      name: "{{ item }}" 
+      state: present
+    vars:
+      item:
+      - git
+
+#### RedHat ####
+#Levanto el Firewall
+  - name: Start firewalld
+    service: name=firewalld state=started enabled=yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+# Creo la regla de firewalld para httpd
+  - name: insert firewalld rule for httpd
+    firewalld: port={{ httpd_port }}/tcp permanent=true state=enabled immediate=yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+# Inicio y habilito el servicio httpd
+  - name: http service state
+    service: name=httpd state=started enabled=yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+#### Debian ####
+# Creo la regla de ufw para httpd
+  - name: Allow all access to tcp port 80
+    ufw:
+      rule: allow
+      port: "{{ httpd_port }}"
+      proto: tcp
+    when: ansible_facts['os_family'] == "Debian"
+# Reinicio ufw y apache
+  - name: restart-apache
+    service:
+      name: ufw, apache2
+      state: restarted
+  
+# Conf de SELinux para conexiones entre apache y mysql
+  - name: "Allow httpd to connect to db (SELinux)"
+    seboolean:
+      name: httpd_can_network_connect_db
+      persistent: yes
+      state: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+# These tasks are responsible for copying the latest dev/production code from
+# the version control system.
+
+  - name: Copy the code from repository
+    git: repo={{ repository }} dest=/var/www/html/
+
+  - name: Creates the index.php file
+    template: src=../templates/index.php.j2 dest=/var/www/html/index.php
