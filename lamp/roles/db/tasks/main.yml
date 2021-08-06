@@ -11,7 +11,7 @@
       extensions:
       - 'yml'
 
-#### Debian ####
+  #### Debian ####
   - name: Instalo MySQL y sus dependencies
     apt: 
       name: "{{ packages }}"
@@ -24,7 +24,7 @@
         - python3-mysqldb
     when: ansible_facts['os_family'] == "Debian"
 
-#### RedHat ###
+  #### RedHat ###
   - name: Instalo MySQL y sus dependencies
     yum: 
       name: "{{ packages }}"
@@ -32,15 +32,16 @@
     vars:
         packages:
         - mysql-server
+        #- mysql-client
         - mysql
         - python3-pip
-        #- python3-mysql
-        - python3-mysqlclient
+        - python3-mysql
+        #- python3-mysqlclient
         #- python3-mysqldb
         #- python-pymysql
         #- MySQL-python        
     when: ansible_facts['os_family'] == "RedHat"
-  
+
   - name: Instalo MySQL-python
     pip:
       name: mysql-connector-python
@@ -53,15 +54,18 @@
       executable: pip3
       state: present
 
-#### RedHat ###
+  #### RedHat ###
   - name: Configuro SELinux para dejar conectar con el motor mysql en cualquier puerto
     seboolean: name=mysql_connect_any state=true persistent=yes
     when: ansible_facts['os_family'] == "RedHat"
 
   - name: Creo el archivo de configuracion para Mysql
-    template:
+    template:      
       src: ../templates/my.cnf.j2
       dest: /etc/my.cnf
+      owner: mysql
+      group: mysql
+      mode: u=rw,g=rw,o=r
 
   - name: Creo archivos de log de MySQL
     file:
@@ -87,26 +91,33 @@
       group: mysql
       mode: '0775'
 
+  #### RedHat ###
+  - name: Levanto MySQL
+    service: name=mysqld state=started enabled=yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+  #### Debian ###
   - name: Levanto MySQL
     service: name=mysql state=started enabled=yes
+    when: ansible_facts['os_family'] == "Debian"
 
-#### RedHat ###
+  #### RedHat ###
   - name: Levanto firewalld
     service: name=firewalld state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-#### Debian ###
+  #### Debian ###
   - name: Levanto ufw
     service: name=ufw state=started enabled=yes
     when: ansible_facts['os_family'] == "Debian"
 
-#### RedHat ###
+  #### RedHat ###
   - name: inserto regla de firewalld
     firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled immediate=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-#### Debian ####
-# Creo la regla de ufw para MySQL
+  #### Debian ####
+  # Creo la regla de ufw para MySQL
   - name: inserto regla de ufw
     ufw:
       rule: allow
@@ -114,17 +125,16 @@
       proto: tcp
     when: ansible_facts['os_family'] == "Debian"
 
-
-
-#### RedHat ###
+  #### RedHat ###
   - name: Create Application Database
     mysql_db:
+      #login_unix_socket: /var/run/mysqld/mysqld.sock
       name: "{{ dbname }}"
       state: present
 
-# - name: Create Application DB User
-#   mysql_user:
-#    name: {{ dbuser }}
-#    password: {{ upassword }}
-#    priv: "*.*:ALL host='%'"
-#    state: present
+  # - name: Create Application DB User
+  #   mysql_user:
+  #    name: {{ dbuser }}
+  #    password: {{ upassword }}
+  #    priv: "*.*:ALL host='%'"
+  #    state: present
