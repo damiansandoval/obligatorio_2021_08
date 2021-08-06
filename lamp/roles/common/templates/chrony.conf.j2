@@ -1,12 +1,2 @@
-
-driftfile /var/lib/ntp/drift
-
-restrict 127.0.0.1 
-restrict -6 ::1
-
 server pool.ntp.org
-
-includefile /etc/ntp/crypto/pw
-
-keys /etc/ntp/keys
-
+allow 192.0.2/24
