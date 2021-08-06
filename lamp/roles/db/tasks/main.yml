@@ -1,13 +1,13 @@
 # Lineas 8, 9 y 10 son para testear de manera independiente el rol como playbook
 
-- hosts: all
-  become: yes
-  tasks:
+# - hosts: all
+#   become: yes
+#   tasks:
 
 # Incluyo archivo de variables
   - name: Incluyo variables    
     include_vars:
-      dir: ../../../group_vars/
+      dir: /home/damian/obligatorio_2021_08/lamp/group_vars
       extensions:
       - 'yml'
 

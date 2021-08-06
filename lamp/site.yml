@@ -17,10 +17,10 @@
   roles:
     - web
 
-# - name: deploy MySQL and configure the databases
-#   hosts: databases
-#   remote_user: ansible
-#   become: yes
+- name: deploy MySQL and configure the databases
+  hosts: all
+  remote_user: ansible
+  become: yes
 
-#   roles:
-#     - db
+  roles:
+    - db
