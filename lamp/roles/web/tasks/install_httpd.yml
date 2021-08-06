@@ -5,7 +5,7 @@
   tasks:
 # Incluir variable HTTPD-Port del archivo de variables
   - name: Incluir variables
-    include_vars: ../../../group_vars/all
+    include_vars: ../../../group_vars/all.yml
 
 #### Instalacion de apache y php ####
 
@@ -68,15 +68,24 @@
       proto: tcp
     when: ansible_facts['os_family'] == "Debian"
 # Reinicio ufw y apache
-  handlers:
-    - name: restart-apache
-      service:
-        name: ufw, apache2
-        state: restarted  
+  - name: restart-apache
+    service:
+      name: ufw, apache2
+      state: restarted
   
 # Conf de SELinux para conexiones entre apache y mysql
-    - name: "Allow httpd to connect to db (SELinux)"
-      seboolean:
-        name: httpd_can_network_connect_db
-        persistent: yes
-        state: yes
+  - name: "Allow httpd to connect to db (SELinux)"
+    seboolean:
+      name: httpd_can_network_connect_db
+      persistent: yes
+      state: yes
+    when: ansible_facts['os_family'] == "RedHat"
+
+# These tasks are responsible for copying the latest dev/production code from
+# the version control system.
+
+  - name: Copy the code from repository
+    git: repo={{ repository }} dest=/var/www/html/
+
+  - name: Creates the index.php file
+    template: src=../templates/index.php.j2 dest=/var/www/html/index.php

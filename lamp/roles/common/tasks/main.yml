@@ -5,9 +5,9 @@
 
 # Lineas 8, 9 y 10 son para testear de manera independiente el rol como playbook
 
-  - hosts: all
-    become: yes
-    tasks:
+  # - hosts: all
+  #   become: yes
+  #   tasks:
 
 
   # Instalacion de Epel en caso de derivados de RedHat
