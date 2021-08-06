@@ -10,7 +10,7 @@
     - common
 
 - name: configure and deploy the webservers and application code
-  hosts: webservers
+  hosts: all
   remote_user: ansible
   become: yes
 

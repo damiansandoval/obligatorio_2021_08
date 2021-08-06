@@ -42,7 +42,17 @@
     vars:
       item:
       - git
+    when: ansible_facts['os_family'] == "RedHat"
 
+
+  - name: Install web role specific dependencies
+    apt: 
+      name: "{{ item }}" 
+      state: present
+    vars:
+      item:
+      - git
+    when: ansible_facts['os_family'] == "Debian"
 #### RedHat ####
 #Levanto el Firewall
   - name: Start firewalld
@@ -68,11 +78,20 @@
       proto: tcp
     when: ansible_facts['os_family'] == "Debian"
 # Reinicio ufw y apache
+  - name: restart-ufw
+    service:
+      name: ufw
+      state: restarted
+      enabled: yes
+    when: ansible_facts['os_family'] == "Debian"
+
   - name: restart-apache
     service:
-      name: ufw, apache2
+      name: apache2
       state: restarted
-  
+      enabled: yes
+    when: ansible_facts['os_family'] == "Debian"
+    
 # Conf de SELinux para conexiones entre apache y mysql
   - name: "Allow httpd to connect to db (SELinux)"
     seboolean:
