@@ -72,7 +72,7 @@
 # Se crean archivos y directorios de MySQL
 # Tareas comunes
   - name: Crear archivo de configuracion de Mysql
-    template:      
+    template:
       src: ../templates/my.cnf.j2
       dest: /etc/my.cnf
       owner: mysql

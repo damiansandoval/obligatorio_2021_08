@@ -114,9 +114,13 @@
 
 # Estas tareas se encargan de copiar el contenido del repositorio en dev/production.
 # Configuraciones comunes
+  - name: Ansible delete file example
+    file:
+      path: /var/www/html/index.html
+      state: absent
+    when: ansible_facts['os_family'] == "Debian"
 
   - name: Copiar codigo del repositorio
     git: repo={{ repository }} dest=/var/www/html/
-
   - name: Crear el archivo index.php
     template: src=../templates/index.php.j2 dest=/var/www/html/index.php
