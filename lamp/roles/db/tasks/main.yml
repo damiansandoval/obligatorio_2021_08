@@ -93,7 +93,7 @@
       state: touch
       owner: mysql
       group: mysql
-      mode: '0775'    
+      mode: '0775'
 
   - name: Crear directorio para PID de MySQL
     file:
@@ -171,7 +171,6 @@
       name: ''
       host_all: True
       state: absent
-      login_unix_socket: '/var/lib/mysql/mysql.sock'
     when: ansible_facts['os_family'] == "RedHat"
 
 # Creacion de usuario de base de datos
@@ -195,11 +194,3 @@
       priv: '{{ dbname }}.*:ALL,GRANT'
       state: present
     when: ansible_facts['os_family'] == "Debian"
-
-
-
-
-
-
-
-
