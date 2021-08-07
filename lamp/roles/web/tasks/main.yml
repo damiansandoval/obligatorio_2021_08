@@ -1,16 +1,23 @@
+# Este rol contiene todas las tareas y configuraciones necesarias
+# para dejar operativo el servidor web Apache con soporte para
+# contenido PHP - Optimizado para realizar las tareas en RedHat y Debian
+
+
 # Lineas 8, 9 y 10 son para testear de manera independiente el rol como playbook
 
 # - hosts: all
 #   become: yes
 #   tasks:
-# Incluir variable HTTPD-Port del archivo de variables
+
+
+# Incluir variables del archivo de variables
   - name: Incluir variables
     include_vars: ../../../group_vars/all.yml
 
 #### Instalacion de apache y php ####
 
 #### RedHat ###
-  - name: Install httpd and php
+  - name: RedHat - Instalar httpd y php
     yum: 
       name: "{{ packages }}"
       state: present
@@ -21,8 +28,8 @@
         - php-mysqlnd
     when: ansible_facts['os_family'] == "RedHat"
 
-#####  Debian ####
-  - name: Install httpd and php
+####  Debian ####
+  - name: Debian - Instalar httpd y php
     apt: 
       name: "{{ packages }}"
       state: present
@@ -35,7 +42,9 @@
     when: ansible_facts['os_family'] == "Debian"
 
 #### Instalacion de git ###
-  - name: Install web role specific dependencies
+
+### RedHat ###
+  - name: RedHat - Instalar Git
     yum: 
       name: "{{ item }}" 
       state: present
@@ -44,8 +53,8 @@
       - git
     when: ansible_facts['os_family'] == "RedHat"
 
-
-  - name: Install web role specific dependencies
+### Debian ###
+  - name: Debian - Instalar Git
     apt: 
       name: "{{ item }}" 
       state: present
@@ -53,58 +62,61 @@
       item:
       - git
     when: ansible_facts['os_family'] == "Debian"
+   
+#Configuraciones de firewall para apache y comunicacion con mysql   
+    
 #### RedHat ####
-#Levanto el Firewall
-  - name: Start firewalld
+#Iniciar servicio firewalld
+  - name: RedHat - Iniciar firewalld
     service: name=firewalld state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-# Creo la regla de firewalld para httpd
-  - name: insert firewalld rule for httpd
+# Creacion de regla de firewalld para httpd
+  - name: RedHat - Insertar regla de firewalld para httpd
     firewalld: port={{ httpd_port }}/tcp permanent=true state=enabled immediate=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-# Inicio y habilito el servicio httpd
-  - name: http service state
+# Inicio y habilitacion de servicio httpd
+  - name: RedHat - iniciar y habilitar httpd
     service: name=httpd state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
 
 #### Debian ####
-# Creo la regla de ufw para httpd
-  - name: Allow all access to tcp port 80
+# Creacion de regla de ufw para httpd
+  - name: Debian - Permitir acceso al puerto 80
     ufw:
       rule: allow
       port: "{{ httpd_port }}"
       proto: tcp
     when: ansible_facts['os_family'] == "Debian"
-# Reinicio ufw y apache
-  - name: restart-ufw
+# Reinicio servicios ufw y apache
+  - name: Debian - Reiniciar ufw 
     service:
       name: ufw
       state: restarted
       enabled: yes
     when: ansible_facts['os_family'] == "Debian"
 
-  - name: restart-apache
+  - name: Debian - reiniciar apache
     service:
       name: apache2
       state: restarted
       enabled: yes
     when: ansible_facts['os_family'] == "Debian"
     
-# Conf de SELinux para conexiones entre apache y mysql
-  - name: "Allow httpd to connect to db (SELinux)"
+# Configuracion de SELinux para conexiones entre apache y mysql - RedHat
+  - name: RedHat - Permitir a httpd conectar con mysql
     seboolean:
       name: httpd_can_network_connect_db
       persistent: yes
       state: yes
     when: ansible_facts['os_family'] == "RedHat"
 
-# These tasks are responsible for copying the latest dev/production code from
-# the version control system.
+# Estas tareas se encargan de copiar el contenido del repositorio en dev/production.
+# Configuraciones comunes
 
-  - name: Copy the code from repository
+  - name: Copiar codigo del repositorio
     git: repo={{ repository }} dest=/var/www/html/
 
-  - name: Creates the index.php file
+  - name: Crear el archivo index.php
     template: src=../templates/index.php.j2 dest=/var/www/html/index.php

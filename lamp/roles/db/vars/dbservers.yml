@@ -1,0 +1,8 @@
+---
+# Archivo de variables a utilizar en el role de servidores de bases de datos
+
+mysqlservice: mysqld
+mysql_port: '3306'
+dbuser: foouser
+dbname: foodb
+upassword: abc

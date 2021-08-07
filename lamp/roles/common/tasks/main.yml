@@ -10,29 +10,29 @@
   #   tasks:
 
 
-  # Instalacion de Epel en caso de derivados de RedHat
-    - name: Install Epel
+ # Instalacion de Epel derivados de RedHat
+    - name: RedHat - Instalar Epel
       yum:
         name: epel-release
         state: present
       when: ansible_facts['os_family'] == "RedHat"
 
-# Instalacion de chrony en caso de derivados de RedHat
-    - name: Install chrony RedHat
+# Instalacion de chrony en derivados de RedHat
+    - name: RedHat - Instalar Chrony
       yum:
         name: chrony
         state: present
       when: ansible_facts['os_family'] == "RedHat"  
 
-# Instalacion de chrony en caso de derivados de Debian
-    - name: Install chrony Debian
+# Instalacion de chrony en derivados de Debian
+    - name: Debian - Instalar Chrony 
       apt:
         name: chrony
         state: present
       when: ansible_facts['os_family'] == "Debian"
 
-#Instalacion de paquetes de seguridad en derivados de RedHat
-    - name: Install common dependencies
+# Instalacion de paquetes de seguridad en derivados de RedHat
+    - name: RedHat - Security Packages
       yum: 
         name: "{{ packages }}"
         state: installed
@@ -44,10 +44,11 @@
         - firewalld
       when: ansible_facts['os_family'] == "RedHat" 
 
-#Archivo de configuracion de Chrony
-    - name: Configure chrony file
+# Archivo de configuracion de Chrony - Configuracion comun
+# Como template se utiliza el archivo del directorio templates
+    - name: Copiar archivo de configuracion Crony
       template: src=../templates/chrony.conf.j2 dest=/etc/chrony.conf
 
-#Iniciar servicio Chronyd
-    - name: Start the chrony service
+#Iniciar servicio Chronyd - Configuracion comun 
+    - name: Iniciar servicio Chrony
       service: name=chronyd state=started enabled=yes

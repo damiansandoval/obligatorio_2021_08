@@ -1,5 +1,5 @@
-[webservers]
+[RedHat]
 centos-ob
 
-[databases]
+[Debian]
 ubuntu-ob

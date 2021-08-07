@@ -1,7 +1,12 @@
 ---
-# This playbook deploys the whole application stack in this site.
+# Este playbook se encarga de hacer el despliegue de los tres roles
+# que componen el proceso de instalación y configuración de un 
+# Stack LAMP.
+# Todos los roles son compatibles con distribuciones derivadas de RedHat y Debian
 
-- name: apply common configuration to all nodes
+# Primer role a implementar. Contiene paquetes esenciales para el correcto funcionamiento
+# de los servidores a configurar.
+- name: Aplicar configuraciones basicas en los servidores
   hosts: all
   remote_user: ansible
   become: yes
@@ -9,7 +14,9 @@
   roles:
     - common
 
-- name: configure and deploy the webservers and application code
+
+# Segundo role. Instala configura Apache, con soporte para contenido PHP
+- name: Desplegar Servidores Web
   hosts: all
   remote_user: ansible
   become: yes
@@ -17,7 +24,9 @@
   roles:
     - web
 
-- name: deploy MySQL and configure the databases
+
+# Tercer role. Despliegue de servidor de bases de datos
+- name: Desplegar servidores de bases de datos
   hosts: all
   remote_user: ansible
   become: yes

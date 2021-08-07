@@ -1,18 +1,25 @@
+
+# Role que permite hacer el despliegue de los servidores de bases de datos
+# Se hace la instalación y configuración en derivados de RedHat y Debian
+
+
 # Lineas 8, 9 y 10 son para testear de manera independiente el rol como playbook
 
 # - hosts: all
 #   become: yes
 #   tasks:
 
-# Incluyo archivo de variables
-  - name: Incluyo variables    
+# Se incluye archivo de variables
+  - name: Incluir variables
     include_vars:
-      dir: /home/damian/obligatorio_2021_08/lamp/group_vars
+      dir: ../vars/
+      #dir: /home/rsanchez/proyectos/obligatorio_2021_08/lamp/group_vars
       extensions:
-      - 'yml'
+        - 'yml'
 
+# Instalacion del servidor de bases de datos y sus dependencias
   #### Debian ####
-  - name: Instalo MySQL y sus dependencies
+  - name: Debian - Instalar MySQL y dependencias
     apt: 
       name: "{{ packages }}"
       state: present
@@ -25,7 +32,7 @@
     when: ansible_facts['os_family'] == "Debian"
 
   #### RedHat ###
-  - name: Instalo MySQL y sus dependencies
+  - name: RedHat - Instalar MySQL y dependencies
     yum: 
       name: "{{ packages }}"
       state: present
@@ -42,24 +49,29 @@
         #- MySQL-python        
     when: ansible_facts['os_family'] == "RedHat"
 
-  - name: Instalo MySQL-python
+##Se instalan paquetes MySQL-python y PyMySQL - Configuraciones comunes
+  - name: Instalar MySQL-python
     pip:
       name: mysql-connector-python
       executable: pip3
       state: present
 
-  - name: Instalo MySQL-python
+  - name: Instalar PyMySQL
     pip:
       name: PyMySQL
       executable: pip3
       state: present
 
   #### RedHat ###
-  - name: Configuro SELinux para dejar conectar con el motor mysql en cualquier puerto
+  # Se configura SELinux para que permita conectar con el servidor de base de datos
+  # en cualquier puerto.
+  - name: RedHat - Permitir conexiones a mysql - SELinux
     seboolean: name=mysql_connect_any state=true persistent=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-  - name: Creo el archivo de configuracion para Mysql
+# Se crean archivos y directorios de MySQL
+# Tareas comunes
+  - name: Crear archivo de configuracion de Mysql
     template:      
       src: ../templates/my.cnf.j2
       dest: /etc/my.cnf
@@ -67,7 +79,7 @@
       group: mysql
       mode: u=rw,g=rw,o=r
 
-  - name: Creo archivos de log de MySQL
+  - name: Crear archivos de log de MySQL
     file:
       path: /var/log/mysqld.log
       state: touch
@@ -75,7 +87,7 @@
       group: mysql
       mode: '0775'
 
-  - name: Creo socket de MySQL
+  - name: Crear socket de MySQL
     file:
       path: /var/lib/mysql/mysql.sock
       state: touch
@@ -83,7 +95,7 @@
       group: mysql
       mode: '0775'    
 
-  - name: Creo el directorio para PID de MySQL
+  - name: Crear directorio para PID de MySQL
     file:
       path: /var/run/mysqld
       state: directory
@@ -91,57 +103,59 @@
       group: mysql
       mode: '0775'
 
+# Se inicializan y habilitan servicios MySQL
   #### RedHat ###
-  - name: Levanto MySQL
+  - name: RedHat - Iniciar y habilitar MySQL
     service: name=mysqld state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-  #### Debian ###
-  - name: Levanto MySQL
-    service: name=mysql state=started enabled=yes
-    when: ansible_facts['os_family'] == "Debian"
-
-  #### RedHat ###
-  - name: Levanto firewalld
+  - name: Iniciar y Habilitar firewalld
     service: name=firewalld state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
 
   #### Debian ###
-  - name: Levanto ufw
+  - name: Debian - Iniciar y habilitar MySQL
+    service: name=mysql state=started enabled=yes
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Debian - Iniciar y habilitar ufw
     service: name=ufw state=started enabled=yes
     when: ansible_facts['os_family'] == "Debian"
 
+# Creacion de reglas de firewall para funcionamiento de MySQL
   #### RedHat ###
-  - name: inserto regla de firewalld
+  - name: RedHat - Creacion regla de firewalld MYSQL
     firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled immediate=yes
     when: ansible_facts['os_family'] == "RedHat"
 
   #### Debian ####
-  # Creo la regla de ufw para MySQL
-  - name: inserto regla de ufw
+  - name: Debian - Creacion regla de firewall MySQL
     ufw:
       rule: allow
       port: "{{ mysql_port }}"
       proto: tcp
     when: ansible_facts['os_family'] == "Debian"
 
+# Creacion y configuracion de base de datos
+
   #### RedHat ###
-  - name: Create Application Database
+  - name: RedHat - Crear DB de aplicacion
     mysql_db:      
       name: "{{ dbname }}"
       state: present
     when: ansible_facts['os_family'] == "RedHat"
 
   #### Debian ###
-  - name: Create Application Database
+  - name: Debian - Crear DB de aplicacion
     mysql_db:
       login_unix_socket: /var/run/mysqld/mysqld.sock
       name: "{{ dbname }}"
       state: present
     when: ansible_facts['os_family'] == "Debian"   
 
+# Eliminacion de usuario anonimo 
   ### Debian ###
-  - name: Borrar usuario anonimo
+  - name: Debian - Eliminar usuario anonimo
     no_log: true
     mysql_user:      
       login_unix_socket: /var/run/mysqld/mysqld.sock
@@ -151,7 +165,7 @@
     when: ansible_facts['os_family'] == "Debian"  
   
   ### RedHat ###
-  - name: Borrar usuario anonimo
+  - name: RedHat - Eliminar usuario anonimo
     no_log: true
     mysql_user:      
       name: ''
@@ -159,8 +173,9 @@
       state: absent
     when: ansible_facts['os_family'] == "RedHat"
 
+# Creacion de usuario de base de datos
   ### RedHat ###
-  - name: Create Application DB User
+  - name: RedHat - Crear usuario en DB
     no_log: true
     mysql_user:
       name: "{{ dbuser }}"
@@ -170,7 +185,7 @@
     when: ansible_facts['os_family'] == "RedHat"
   
   ### Debian ###
-  - name: Create Application DB User
+  - name: Debian - Crear usuario en DB
     no_log: true
     mysql_user:
       login_unix_socket: /var/run/mysqld/mysqld.sock

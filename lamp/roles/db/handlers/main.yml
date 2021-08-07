@@ -1,5 +1,5 @@
 ---
-# Handler to handle DB tier notifications
+# Handler para el rol DB
 
 - name: restart mysql
   service: name=mysql state=restarted
