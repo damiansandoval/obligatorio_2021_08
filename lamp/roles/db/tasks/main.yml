@@ -94,6 +94,17 @@
       owner: mysql
       group: mysql
       mode: '0775'
+    when: ansible_facts['os_family'] == "Debian"
+       
+
+  - name: Crear socket de MariaDB
+    file:
+      path: /var/run/mariadb/mysqld.sock
+      state: touch
+      owner: mysql
+      group: mysql
+      mode: '0775'
+    when: ansible_facts['os_family'] == "RedHat"
 
   - name: Crear directorio para PID de MySQL
     file:
@@ -153,26 +164,6 @@
       state: present
     when: ansible_facts['os_family'] == "Debian"   
 
-# Eliminacion de usuario anonimo 
-### Debian ###
-  - name: Debian - Eliminar usuario anonimo
-    no_log: true
-    mysql_user:      
-      login_unix_socket: /var/run/mysqld/mysqld.sock
-      name: ''
-      host: localhost
-      state: absent
-    when: ansible_facts['os_family'] == "Debian"  
-
-  ### RedHat ###
-  - name: RedHat - Eliminar usuario anonimo
-    no_log: true
-    mysql_user:
-      name: ''
-      host_all: True
-      state: absent
-    when: ansible_facts['os_family'] == "RedHat"
-
 # Creacion de usuario de base de datos
 ### RedHat ###
   - name: RedHat - Crear usuario en DB
@@ -194,3 +185,25 @@
       priv: '{{ dbname }}.*:ALL,GRANT'
       state: present
     when: ansible_facts['os_family'] == "Debian"
+
+
+    # Eliminacion de usuario anonimo 
+### Debian ###
+  - name: Debian - Eliminar usuario anonimo
+    no_log: true
+    mysql_user:  
+      login_unix_socket: /var/run/mysqld/mysqld.sock    
+      name: ''
+      host: localhost
+      state: absent
+    when: ansible_facts['os_family'] == "Debian"  
+
+  ### RedHat ###
+  - name: RedHat - Eliminar usuario anonimo
+    no_log: true
+    mysql_user:
+      # login_unix_socket: /var/run/mariadb/mysqld.sock      
+      name: ''
+      host_all: True
+      state: absent
+    when: ansible_facts['os_family'] == "RedHat"
