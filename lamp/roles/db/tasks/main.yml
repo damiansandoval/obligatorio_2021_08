@@ -9,16 +9,15 @@
 #   become: yes
 #   tasks:
 
-# Se incluye archivo de variables
+#Se incluye archivo de variables
   - name: Incluir variables
     include_vars:
       dir: ../vars/
-      #dir: /home/rsanchez/proyectos/obligatorio_2021_08/lamp/group_vars
       extensions:
         - 'yml'
 
 # Instalacion del servidor de bases de datos y sus dependencias
-  #### Debian ####
+#### Debian ####
   - name: Debian - Instalar MySQL y dependencias
     apt: 
       name: "{{ packages }}"
@@ -31,22 +30,21 @@
         - python3-mysqldb
     when: ansible_facts['os_family'] == "Debian"
 
-  #### RedHat ###
-  - name: RedHat - Instalar MySQL y dependencies
+### RedHat ###
+  - name: RedHat - Instalar MariaDB y dependencies
     yum: 
       name: "{{ packages }}"
       state: present
     vars:
         packages:
-        - mysql-server
-        #- mysql-client
-        - mysql
-        - python3-pip
-        - python3-mysql
-        #- python3-mysqlclient
-        #- python3-mysqldb
-        #- python-pymysql
-        #- MySQL-python        
+        - mariadb-server
+        - python3-PyMySQL
+    when: ansible_facts['os_family'] == "RedHat"
+  - name: start mariadb
+    service:
+      name: mariadb
+      enabled: true
+      state: started
     when: ansible_facts['os_family'] == "RedHat"
 
 ##Se instalan paquetes MySQL-python y PyMySQL - Configuraciones comunes
@@ -55,16 +53,18 @@
       name: mysql-connector-python
       executable: pip3
       state: present
+    when: ansible_facts['os_family'] == "Debian"
 
   - name: Instalar PyMySQL
     pip:
       name: PyMySQL
       executable: pip3
       state: present
+    when: ansible_facts['os_family'] == "Debian"
 
-  #### RedHat ###
-  # Se configura SELinux para que permita conectar con el servidor de base de datos
-  # en cualquier puerto.
+#### RedHat ###
+# Se configura SELinux para que permita conectar con el servidor de base de datos
+# en cualquier puerto.
   - name: RedHat - Permitir conexiones a mysql - SELinux
     seboolean: name=mysql_connect_any state=true persistent=yes
     when: ansible_facts['os_family'] == "RedHat"
@@ -104,7 +104,7 @@
       mode: '0775'
 
 # Se inicializan y habilitan servicios MySQL
-  #### RedHat ###
+#### RedHat ###
   - name: RedHat - Iniciar y habilitar MySQL
     service: name=mysqld state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
@@ -122,13 +122,13 @@
     service: name=ufw state=started enabled=yes
     when: ansible_facts['os_family'] == "Debian"
 
-# Creacion de reglas de firewall para funcionamiento de MySQL
+# Creacion de reglas de firewall para funcionamiento de MariaDB
   #### RedHat ###
-  - name: RedHat - Creacion regla de firewalld MYSQL
+  - name: RedHat - Creacion regla de firewalld MariaDB
     firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled immediate=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-  #### Debian ####
+#### Debian ####
   - name: Debian - Creacion regla de firewall MySQL
     ufw:
       rule: allow
@@ -138,14 +138,14 @@
 
 # Creacion y configuracion de base de datos
 
-  #### RedHat ###
+#### RedHat ###
   - name: RedHat - Crear DB de aplicacion
     mysql_db:      
       name: "{{ dbname }}"
       state: present
     when: ansible_facts['os_family'] == "RedHat"
 
-  #### Debian ###
+#### Debian ###
   - name: Debian - Crear DB de aplicacion
     mysql_db:
       login_unix_socket: /var/run/mysqld/mysqld.sock
@@ -154,7 +154,7 @@
     when: ansible_facts['os_family'] == "Debian"   
 
 # Eliminacion de usuario anonimo 
-  ### Debian ###
+### Debian ###
   - name: Debian - Eliminar usuario anonimo
     no_log: true
     mysql_user:      
@@ -163,18 +163,19 @@
       host: localhost
       state: absent
     when: ansible_facts['os_family'] == "Debian"  
-  
+
   ### RedHat ###
   - name: RedHat - Eliminar usuario anonimo
     no_log: true
-    mysql_user:      
+    mysql_user:
       name: ''
-      host: localhost
+      host_all: True
       state: absent
+      login_unix_socket: '/var/lib/mysql/mysql.sock'
     when: ansible_facts['os_family'] == "RedHat"
 
 # Creacion de usuario de base de datos
-  ### RedHat ###
+### RedHat ###
   - name: RedHat - Crear usuario en DB
     no_log: true
     mysql_user:
@@ -183,8 +184,8 @@
       priv: '{{ dbname }}.*:ALL,GRANT'
       state: present
     when: ansible_facts['os_family'] == "RedHat"
-  
-  ### Debian ###
+
+### Debian ###
   - name: Debian - Crear usuario en DB
     no_log: true
     mysql_user:
@@ -194,3 +195,11 @@
       priv: '{{ dbname }}.*:ALL,GRANT'
       state: present
     when: ansible_facts['os_family'] == "Debian"
+
+
+
+
+
+
+
+
