@@ -16,7 +16,7 @@
 
 #### Instalacion de apache y php ####
 
-#### RedHat ###
+#### RedHat ####
   - name: RedHat - Instalar httpd y php
     yum: 
       name: "{{ packages }}"
