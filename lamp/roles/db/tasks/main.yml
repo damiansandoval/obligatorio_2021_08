@@ -1,5 +1,5 @@
 
-# Role que permite hacer el despliegue de los servidores de bases de datos
+# Rol que permite el despliegue de los servidores de bases de datos
 # Se hace la instalación y configuración en derivados de RedHat y Debian
 
 
@@ -16,7 +16,7 @@
       extensions:
         - 'yml'
 
-# Instalacion del servidor de bases de datos y sus dependencias
+# instalación del servidor de bases de datos y sus dependencias
 #### Debian ####
   - name: Debian - Instalar MySQL y dependencias
     apt: 
@@ -30,7 +30,7 @@
         - python3-mysqldb
     when: ansible_facts['os_family'] == "Debian"
 
-### RedHat ###
+#### RedHat ####
   - name: RedHat - Instalar MariaDB y dependencies
     yum: 
       name: "{{ packages }}"
@@ -40,37 +40,36 @@
         - mariadb-server
         - python3-PyMySQL
     when: ansible_facts['os_family'] == "RedHat"
-  - name: start mariadb
+  - name: Iniciar mariadb
     service:
       name: mariadb
       enabled: true
       state: started
     when: ansible_facts['os_family'] == "RedHat"
 
-##Se instalan paquetes MySQL-python y PyMySQL - Configuraciones comunes
-  - name: Instalar MySQL-python
+#Se instalan paquetes MySQL-python y PyMySQL - Configuraciones comunes
+  - name: Debian - Instalar MySQL-python
     pip:
       name: mysql-connector-python
       executable: pip3
       state: present
     when: ansible_facts['os_family'] == "Debian"
 
-  - name: Instalar PyMySQL
+  - name: Debian - Instalar PyMySQL
     pip:
       name: PyMySQL
       executable: pip3
       state: present
     when: ansible_facts['os_family'] == "Debian"
 
-#### RedHat ###
-# Se configura SELinux para que permita conectar con el servidor de base de datos
-# en cualquier puerto.
+#### RedHat ####
+#Se configura SELinux para que permita conectar con el servidor de base de datos en cualquier puerto.
   - name: RedHat - Permitir conexiones a mysql - SELinux
     seboolean: name=mysql_connect_any state=true persistent=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-# Se crean archivos y directorios de MySQL
-# Tareas comunes
+#Se crean archivos y directorios de MySQL
+#Tareas comunes
   - name: Crear archivo de configuracion de Mysql
     template:
       src: ../templates/my.cnf.j2
@@ -87,7 +86,7 @@
       group: mysql
       mode: '0775'
 
-  - name: Crear socket de MySQL
+  - name: Debian - Crear socket de MySQL
     file:
       path: /var/lib/mysql/mysql.sock
       state: touch
@@ -97,7 +96,7 @@
     when: ansible_facts['os_family'] == "Debian"
        
 
-  - name: Crear socket de MariaDB
+  - name: RedHat - Crear socket de MariaDB
     file:
       path: /var/run/mariadb/mysqld.sock
       state: touch
@@ -115,16 +114,16 @@
       mode: '0775'
 
 # Se inicializan y habilitan servicios MySQL
-#### RedHat ###
+#### RedHat ####
   - name: RedHat - Iniciar y habilitar MySQL
     service: name=mysqld state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-  - name: Iniciar y Habilitar firewalld
+  - name: RedHat - Iniciar y Habilitar firewalld
     service: name=firewalld state=started enabled=yes
     when: ansible_facts['os_family'] == "RedHat"
 
-  #### Debian ###
+  #### Debian ####
   - name: Debian - Iniciar y habilitar MySQL
     service: name=mysql state=started enabled=yes
     when: ansible_facts['os_family'] == "Debian"
@@ -134,7 +133,7 @@
     when: ansible_facts['os_family'] == "Debian"
 
 # Creacion de reglas de firewall para funcionamiento de MariaDB
-  #### RedHat ###
+  #### RedHat ####
   - name: RedHat - Creacion regla de firewalld MariaDB
     firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled immediate=yes
     when: ansible_facts['os_family'] == "RedHat"
@@ -149,14 +148,14 @@
 
 # Creacion y configuracion de base de datos
 
-#### RedHat ###
+#### RedHat ####
   - name: RedHat - Crear DB de aplicacion
     mysql_db:      
       name: "{{ dbname }}"
       state: present
     when: ansible_facts['os_family'] == "RedHat"
 
-#### Debian ###
+#### Debian ####
   - name: Debian - Crear DB de aplicacion
     mysql_db:
       login_unix_socket: /var/run/mysqld/mysqld.sock
@@ -165,7 +164,7 @@
     when: ansible_facts['os_family'] == "Debian"   
 
 # Creacion de usuario de base de datos
-### RedHat ###
+#### RedHat ####
   - name: RedHat - Crear usuario en DB
     no_log: true
     mysql_user:
@@ -175,7 +174,7 @@
       state: present
     when: ansible_facts['os_family'] == "RedHat"
 
-### Debian ###
+#### Debian ####
   - name: Debian - Crear usuario en DB
     no_log: true
     mysql_user:
@@ -188,7 +187,7 @@
 
 
     # Eliminacion de usuario anonimo 
-### Debian ###
+#### Debian ####
   - name: Debian - Eliminar usuario anonimo
     no_log: true
     mysql_user:  
@@ -198,11 +197,10 @@
       state: absent
     when: ansible_facts['os_family'] == "Debian"  
 
-  ### RedHat ###
+  #### RedHat ####
   - name: RedHat - Eliminar usuario anonimo
     no_log: true
-    mysql_user:
-      # login_unix_socket: /var/run/mariadb/mysqld.sock      
+    mysql_user:      
       name: ''
       host_all: True
       state: absent
