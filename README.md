@@ -79,17 +79,14 @@ _Para el proyecto se utilizaron las siguientes herramientas_
 
 ## Versionado 📌
 
-Usamos [Git](http://https://git-scm.com/) para el versionado. y como repositorio se utilizó GitHub [GitHub](https://github.com/)
+Usamos [Git](http://https://git-scm.com/) para el versionado. y como repositorio se utilizó [GitHub](https://github.com/)
 
 ## Autores ✒️
-
 
 * **Enrique Verdes** - *Codigo Inicial* - [emverdes](https://github.com/emverdes)
 * **Ricardo Sanchez** - *Codigo, Pruebas y Documentación* - [ricardosanchezr96](https://github.com/ricardosanchezr96)
 * **Damian Sandoval** - *Codigo, Pruebas y Documentación* - [damiansandoval](https://github.com/damiansandoval)
 * **Martin Pacheco** - *Codigo, Pruebas y Documentación* - [mrtn90](https://github.com/mrtn90)
-
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
 
 ## Licencia 📄
 
