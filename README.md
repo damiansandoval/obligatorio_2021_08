@@ -1,25 +1,27 @@
 # Obligatorio Taller de Servidores Linux
 
-_El siguiente es un proyecto para despliegue de un stack LAMP en servidores RedHat y derivados, asi como tambien en Debian y derivados._
-
-## Comenzando 🚀
-
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
-
-Mira **Deployment** para conocer como desplegar el proyecto.
+_El siguiente proyecto se trata de automatizar un despliegue de un stack LAMP (Linux, Apache, MySQL, PHP).
+El mismo esta pensado en servidores RedHat y derivados, asi como tambien en Debian y derivados._
 
 
 ### Pre-requisitos 📋
 
 _A continuacion se detallan los prerequisitos necesarios para el correcto despliegue de la solucion_
 
+En el equipo Host:
+* Visual Studio Code
+* VirtualBox o similar
+* WSL en caso de usar un host Windows
+* Maquinas Virtuales con Derivados de RedHat y Debian (Para las pruebas se utilizó CentOS 8 y Ubuntu Server 20.04)
+* Copiar las Llaves publicas a los host destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
+
+En las maquinas Virtuales:
+* usuario ansible con configuracion para poder ejecturar comandos sudo sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo /etc/sudoers
+
 ```
-Un equipo Host con:
-Visual Studio Code
-VirtualBox
-Maquinas Virtuales con sistemas operativos basados en RedHat y Debian,
-(En nuestras pruebas se utilizo CentOS 8 y Ubuntu Server 20.04)
+ansible ALL=(ALL) NOPASSWD:ALL
 ```
+
 
 ### Instalación ��
 
