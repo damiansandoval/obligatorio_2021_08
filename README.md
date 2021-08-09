@@ -33,13 +33,17 @@ _Luego de haber completado los prerrequisitos se debera de ejecturar las siguien
 git clone https://github.com/damiansandoval/obligatorio_2021_08
 ```
 
-_luego de esto cambiarse a la carpeta obligatorio_2021_08_
+_luego de esto cambiarse a la carpeta **obligatorio_2021_08**_
 
 ```
-hasta finalizar
+cd obligatorio_2021_08
 ```
 
-_Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para una pequeña demo_
+_Por ultimo ejecutar el playbook de la siguiente manera_
+
+```
+ansible-playbook lamp/site.yml
+```
 
 ## Ejecutando las pruebas ⚙️
 
