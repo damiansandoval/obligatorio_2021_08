@@ -1,31 +1,31 @@
 # Obligatorio Taller de Servidores Linux
 
 _El siguiente proyecto se trata de automatizar un despliegue de un stack LAMP (Linux, Apache, MySQL, PHP).
-El mismo esta pensado en servidores RedHat y derivados, asi como tambien en Debian y derivados._
+El mismo está pensado en servidores RedHat y derivados, así como también en Debian y derivados._
 
 ### Pre-requisitos 📋
 
-_A continuacion se detallan los prerequisitos necesarios para el correcto despliegue de la solucion_
+_A continuación se detallan los prerrequisitos necesarios para el correcto despliegue de la solución_
 
 En el equipo Host:
 * Visual Studio Code
 * VirtualBox o similar
-* WSL en caso de usar un bastion sobre un host Windows
+* WSL en caso de usar un bastión sobre un host Windows
 * Maquinas Virtuales con Derivados de RedHat y Debian (Para las pruebas se utilizó CentOS 8 y Ubuntu Server 20.04)
-* Copiar las Llaves publicas a los host destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
+* Copiar las Llaves públicas a los host destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
 
 En las maquinas Virtuales:
-* usuario ansible con configuracion para poder ejecturar comandos sudo sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
+* usuario ansible con configuración para poder ejecturar comandos sudo sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
 
-```
+
 ansible ALL=(ALL) NOPASSWD:ALL
 ```
 
 ### Despliegue ⚙️
 
-_Luego de haber completado los prerrequisitos se debera de ejecturar las siguientes tareas_
+_Luego de haber completado los prerrequisitos se deberá de ejecturar las siguientes tareas_
 
-* Dentro de Visual studio, conectarse al ambiente **WSL** o al equipo bastion por **ssh** y clonarse el repo:
+* Dentro de Visual studio, conectarse al ambiente **WSL** o al equipo bastión por **ssh** y clonarse el repo:
 
 ```
 git clone https://github.com/damiansandoval/obligatorio_2021_08
@@ -37,7 +37,7 @@ _luego de esto cambiarse a la carpeta **obligatorio_2021_08**_
 cd obligatorio_2021_08
 ```
 
-_Por ultimo ejecutar el playbook de la siguiente manera_
+_Por último ejecutar el playbook de la siguiente manera_
 
 ```
 ansible-playbook lamp/site.yml
