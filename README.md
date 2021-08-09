@@ -3,7 +3,6 @@
 _El siguiente proyecto se trata de automatizar un despliegue de un stack LAMP (Linux, Apache, MySQL, PHP).
 El mismo esta pensado en servidores RedHat y derivados, asi como tambien en Debian y derivados._
 
-
 ### Pre-requisitos 📋
 
 _A continuacion se detallan los prerequisitos necesarios para el correcto despliegue de la solucion_
@@ -21,7 +20,6 @@ En las maquinas Virtuales:
 ```
 ansible ALL=(ALL) NOPASSWD:ALL
 ```
-
 
 ### Despliegue ⚙️
 
@@ -45,10 +43,9 @@ _Por ultimo ejecutar el playbook de la siguiente manera_
 ansible-playbook lamp/site.yml
 ```
 
-## Ejecutando las pruebas ⚙️
+## Prueba de Ejecucíon ⚙️
 
 ![Prueba](https://github.com/damiansandoval/obligatorio_2021_08/blob/main/images/playbook-exec.gif)
-
 
 ## Construido con 🛠️
 
@@ -78,6 +75,3 @@ Usamos [Git](http://https://git-scm.com/) para el versionado. y como repositorio
 ## Licencia 📄
 
 Este proyecto está bajo la Licencia [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
-
-
-
