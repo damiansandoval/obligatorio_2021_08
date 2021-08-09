@@ -8,7 +8,7 @@ El mismo está pensado para servidores RedHat y derivados, así como también pa
 _A continuación se detallan los prerrequisitos necesarios para el correcto despliegue de la solución_
 
 En el equipo Host:
-* Visual Studio Code
+* Visual Studio Code (recomendado)
 * VirtualBox o similar
 * WSL en caso de usar un bastión sobre un host Windows
 * Máquinas Virtuales con derivados de RedHat y Debian (para las pruebas se utilizó CentOS 8 y Ubuntu Server 20.04)
