@@ -80,5 +80,4 @@ Usamos [Git](http://https://git-scm.com/) para el versionado. y como repositorio
 Este proyecto está bajo la Licencia [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
 
 
-#--- ❤️ por [damiansandoval](https://github.com/damiansandoval)
 
