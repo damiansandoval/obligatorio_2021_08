@@ -15,7 +15,7 @@ En el equipo Host:
 * Copiar las Llaves Públicas a los host de destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
 
 En las Máquinas Virtuales:
-* Usuario ansible con configuración para poder ejecturar elevar privilegios sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
+* Usuario ansible configurado para poder elevar privilegios sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
 
 ```
 ansible ALL=(ALL) NOPASSWD:ALL
