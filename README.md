@@ -16,24 +16,24 @@ En el equipo Host:
 * Copiar las Llaves publicas a los host destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
 
 En las maquinas Virtuales:
-* usuario ansible con configuracion para poder ejecturar comandos sudo sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo /etc/sudoers
+* usuario ansible con configuracion para poder ejecturar comandos sudo sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
 
 ```
 ansible ALL=(ALL) NOPASSWD:ALL
 ```
 
 
-### Instalación ��
+### Instalación ⚙️
 
-_Una serie de ejemplos paso a paso que te dice lo que debes ejecutar para tener un entorno de desarrollo ejecutandose_
+_Luego de haber completado los prerrequisitos se debera de ejecturar las siguientes tareas_
 
-_Dí cómo será ese paso_
+* Dentro de Visual studio, conectarse al ambiente **WSL** o al equipo bastion por **ssh** y clonarse el repo:
 
 ```
-Da un ejemplo
+git clone https://github.com/damiansandoval/obligatorio_2021_08
 ```
 
-_Y repite_
+_luego de esto cambiarse a la carpeta obligatorio_2021_08_
 
 ```
 hasta finalizar
