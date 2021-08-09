@@ -47,6 +47,15 @@ ansible-playbook lamp/site.yml
 
 ![Prueba](https://github.com/damiansandoval/obligatorio_2021_08/blob/main/images/playbook-exec.gif)
 
+## Cambios realizados sobre el proyecto original 🛠️
+
+_A continuacion se detallan los cambios realizados sobre el codigo original forkeado de [emverdes](https://github.com/emverdes)_
+
+* En todas tareas se cambio el usuario de ejecucion de **root** a **ansible**
+* Se agrego el parametro ```become: yes``` para permitir al usuario ansible tener privilegios elevados.
+* Para los playbooks **web** y **db** se modificó el parámetro ```hosts``` para que se ejecuten en todos los equipos que contenga el inventario, independientemente de su distribución (derivados **RedHat** o **Debian**)
+* Originalmente el inventario tenia 2 grupos, uno para **webservers** y otro para **dbservers**. Se cambio por **RedHat** y **Debian**, para asi correr los playbook indistinto de la distribucion de linux
+
 ## Construido con 🛠️
 
 _Para el proyecto se utilizaron las siguientes herramientas_
