@@ -1,7 +1,7 @@
 # Obligatorio Taller de Servidores Linux
 
 _El siguiente proyecto se trata de automatizar un despliegue de un stack LAMP (Linux, Apache, MySQL, PHP).
-El mismo está pensado en servidores RedHat y derivados, así como también en Debian y derivados._
+El mismo está pensado para servidores RedHat y derivados, así como también para Debian y derivados._
 
 ### Pre-requisitos 📋
 
@@ -11,11 +11,11 @@ En el equipo Host:
 * Visual Studio Code
 * VirtualBox o similar
 * WSL en caso de usar un bastión sobre un host Windows
-* Maquinas Virtuales con Derivados de RedHat y Debian (Para las pruebas se utilizó CentOS 8 y Ubuntu Server 20.04)
-* Copiar las Llaves públicas a los host destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
+* Máquinas Virtuales con derivados de RedHat y Debian (para las pruebas se utilizó CentOS 8 y Ubuntu Server 20.04)
+* Copiar las Llaves Públicas a los host de destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
 
-En las maquinas Virtuales:
-* usuario ansible con configuración para poder ejecturar comandos sudo sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
+En las Máquinas Virtuales:
+* Usuario ansible con configuración para poder ejecturar elevar privilegios sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
 
 ```
 ansible ALL=(ALL) NOPASSWD:ALL
@@ -23,27 +23,27 @@ ansible ALL=(ALL) NOPASSWD:ALL
 
 ### Despliegue ⚙️
 
-_Luego de haber completado los prerrequisitos se deberá de ejecturar las siguientes tareas_
+_Luego de haber completado los prerrequisitos se deberán ejecturar las siguientes tareas_
 
-* Dentro de Visual studio, conectarse al ambiente **WSL** o al equipo bastión por **ssh** y clonarse el repo:
+* Dentro de Visual Studio, conectarse al ambiente **WSL** o al equipo bastión por **ssh** y clonarse el repo:
 
 ```
 git clone https://github.com/damiansandoval/obligatorio_2021_08
 ```
 
-_luego de esto cambiarse a la carpeta **obligatorio_2021_08**_
+_luego de esto moverse al directorio **obligatorio_2021_08**_
 
 ```
 cd obligatorio_2021_08
 ```
 
-_Por último ejecutar el playbook de la siguiente manera_
+_Por último ejecutar el playbook con el siguiente comando_
 
 ```
 ansible-playbook lamp/site.yml
 ```
 
-## Prueba de Ejecucíon ⚙️
+## Prueba de Ejecución ⚙️
 
 ![Prueba](https://github.com/damiansandoval/obligatorio_2021_08/blob/main/images/playbook-exec.gif)
 
@@ -52,10 +52,10 @@ ansible-playbook lamp/site.yml
 _Para el proyecto se utilizaron las siguientes herramientas_
 
 * [Visual Studio Code](http://www.dropwizard.io/1.0.2/docs/) - IDE
-* [Ansible](https://www.ansible.com/) - Automatizacion de tareas
+* [Ansible](https://www.ansible.com/) - Automatización de tareas
 * [Apache](https://httpd.apache.org/) - Servidor Web
-* [MySQL](https://www.mysql.com/) - Base de Datos
-* [MariaDB](https://mariadb.org/) - Base de Datos
+* [MySQL](https://www.mysql.com/) - Servidor de Base de Datos
+* [MariaDB](https://mariadb.org/) - Servidor de Base de Datos
 * [PHP](https://www.php.net/) - Desarrollo Web
 * [CentOS](https://www.centos.org/) - SO Destino
 * [Ubuntu](https://ubuntu.com) - SO Destino
@@ -63,14 +63,14 @@ _Para el proyecto se utilizaron las siguientes herramientas_
 
 ## Versionado 📌
 
-Usamos [Git](http://https://git-scm.com/) para el versionado. y como repositorio se utilizó [GitHub](https://github.com/)
+Utilizamos [Git](http://https://git-scm.com/) para el versionado. y como repositorio se utilizó [GitHub](https://github.com/)
 
 ## Autores ✒️
 
-* **Enrique Verdes** - *Codigo Inicial* - [emverdes](https://github.com/emverdes)
-* **Ricardo Sanchez** - *Codigo, Pruebas y Documentación* - [ricardosanchezr96](https://github.com/ricardosanchezr96)
-* **Damian Sandoval** - *Codigo, Pruebas y Documentación* - [damiansandoval](https://github.com/damiansandoval)
-* **Martin Pacheco** - *Codigo, Pruebas y Documentación* - [mrtn90](https://github.com/mrtn90)
+* **Enrique Verdes** - *Código Inicial* - [emverdes](https://github.com/emverdes)
+* **Ricardo Sanchez** - *Código, Pruebas y Documentación* - [ricardosanchezr96](https://github.com/ricardosanchezr96)
+* **Damian Sandoval** - *Código, Pruebas y Documentación* - [damiansandoval](https://github.com/damiansandoval)
+* **Martin Pacheco** - *Código, Pruebas y Documentación* - [mrtn90](https://github.com/mrtn90)
 
 ## Licencia 📄
 
