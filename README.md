@@ -17,7 +17,7 @@ En el equipo Host:
 En las maquinas Virtuales:
 * usuario ansible con configuración para poder ejecturar comandos sudo sin necesidad de utilizar la contraseña, para esto se agrega la siguiente linea al archivo **/etc/sudoers**
 
-
+```
 ansible ALL=(ALL) NOPASSWD:ALL
 ```
 
