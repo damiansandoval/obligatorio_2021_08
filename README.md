@@ -11,7 +11,7 @@ _A continuacion se detallan los prerequisitos necesarios para el correcto despli
 En el equipo Host:
 * Visual Studio Code
 * VirtualBox o similar
-* WSL en caso de usar un host Windows
+* WSL en caso de usar un bastion sobre un host Windows
 * Maquinas Virtuales con Derivados de RedHat y Debian (Para las pruebas se utilizó CentOS 8 y Ubuntu Server 20.04)
 * Copiar las Llaves publicas a los host destino para poder ejecutar los comandos por SSH sin necesidad de contraseña
 
@@ -23,7 +23,7 @@ ansible ALL=(ALL) NOPASSWD:ALL
 ```
 
 
-### Instalación ⚙️
+### Despliegue ⚙️
 
 _Luego de haber completado los prerrequisitos se debera de ejecturar las siguientes tareas_
 
@@ -49,25 +49,6 @@ ansible-playbook lamp/site.yml
 
 ![Prueba](https://github.com/damiansandoval/obligatorio_2021_08/blob/main/images/playbook-exec.gif)
 
-### Analice las pruebas end-to-end 🔩
-
-_Explica que verifican estas pruebas y por qué_
-
-```
-Da un ejemplo
-```
-
-### Y las pruebas de estilo de codificación ⌨️
-
-_Explica que verifican estas pruebas y por qué_
-
-```
-Da un ejemplo
-```
-
-## Despliegue 📦
-
-_Agrega notas adicionales sobre como hacer deploy_
 
 ## Construido con 🛠️
 
@@ -99,5 +80,5 @@ Usamos [Git](http://https://git-scm.com/) para el versionado. y como repositorio
 Este proyecto está bajo la Licencia [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
 
 
---- ❤️ por [damiansandoval](https://github.com/damiansandoval)
+#--- ❤️ por [damiansandoval](https://github.com/damiansandoval)
 
