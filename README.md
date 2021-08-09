@@ -55,6 +55,26 @@ _A continuacion se detallan los cambios realizados sobre el codigo original fork
 * Se agrego el parametro ```become: yes``` para permitir al usuario ansible tener privilegios elevados.
 * Para los playbooks **web** y **db** se modificó el parámetro ```hosts``` para que se ejecuten en todos los equipos que contenga el inventario, independientemente de su distribución (derivados **RedHat** o **Debian**)
 * Originalmente el inventario tenia 2 grupos, uno para **webservers** y otro para **dbservers**. Se cambio por **RedHat** y **Debian**, para asi correr los playbook indistinto de la distribucion de linux
+* El el role **common** se quitaron las tags
+* Se cambia el servicio **NTP** por **Chrony**
+* Se hace uso del ```when: ansible_facts['os_family'] == "DISTRO"``` para asi poder tener bloques de codigo que se ejecuten en una distro en particular.
+* En el caso de **RedHat** se agrego el repositorio **Epel**
+* Para **Debian** se opto por instalar **MySQL** mientras que en **RedHat** se utilizó **MariaDB**
+* Se agrega el componente **pip** para instalar las dependencias necesarias para la conexion entre python, php y las bases de datos
+* Eliminacion de usuario **anonimo** en las bases de datos.
+* Se unifican varios playbooks de servidor web en uno solo
+* Configuraciones de Selinux y Firewall para que tanto el servidor web como la base de datos funcionen correctamente
+* Se modifico la estructura de carpetas del proyecto
+* Se agrega un ansible.cfg en la raiz del proyecto
+* Se agrega un documento de entrega en el obligatorio
+* Se modifica los playbooks para que tomen variables de entorno de ejecucion desde una carpeta, indicando que solo tome de ahi los archivos con extension **yml**
+ ``` 
+  - name: Incluir variables
+    include_vars:
+      dir: ../vars/
+      extensions:
+        - 'yml'
+```        
 
 ## Construido con 🛠️
 
@@ -68,6 +88,7 @@ _Para el proyecto se utilizaron las siguientes herramientas_
 * [PHP](https://www.php.net/) - Desarrollo Web
 * [CentOS](https://www.centos.org/) - SO Destino
 * [Ubuntu](https://ubuntu.com) - SO Destino
+* [Pip](https://pypi.org/project/pip/) - Instalador de paquetes para Python
 
 
 ## Versionado 📌
